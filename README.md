@@ -1,64 +1,40 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+-------------------------
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Изменения
 
-## About Laravel
+1. Проект реализован на Laravel
+2. Использовался дамп базы, но были внесены изменения: в таблицу user, поле password - изменена длина поля string(255), что бы хранить пароль в шифрованном виде, пароли к пользователям остались прежними
+3. Нужно залить дамп `mysql/frozeneon_dump.sql`
+4. Изменена структура приложения, один контроллер разбит на несколько специализированных, изменились название роутов
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Выполненные задачи
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Задача 1**. `/main_page/login` - Реализовать аутентификацию. Login model уже содержит наброски для работы с сессией.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Задача 2**. `/main_page/comment` - Реализовать возможность комментирования постов. Дополнительно: реализовать вложенные комментарии, количество уровней вложенности не ограничено.
 
-## Learning Laravel
+**Задача 3**. `/main_page/like` - Реализовать возможность лайкнуть пост или комментарий. Число лайков на один пост/комментарий не ограничено (пользователь может лайкать пока у него на балансе еще есть лайки. Для этого уже создано поле `likes_balance` в таблице пользователей ).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**Задача 4**. `/main_page/add_money` - Реализовать монетизацию. Есть готовый API-Endpoint для зачисления средств принимающий количество валюты. У юзеров в базе есть
+столбец `wallet_balance`, отвечающий за баланс, столбец `wallet_total_refilled` - сумма, на которую юзер пополнил баланс за все время, `wallet_total_withdrawn` - сумма, которую юзер потратил (превратил в лайки). Эти два поля должны учитывать все действия по счету пользователя (пополнения и траты). Используемая валюта - доллар США. Любая работа с балансом пользователя должна быть максимально безопасна и отказоустойчива (все вытекающие из этого технические решения нужно описать и обосновать).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Дополнительные задачи backend
 
-## Laravel Sponsors
+**Дополнительная задача 1**. `/main_page/buy_boosterpack` - Поскольку сейчас в мире самым популярным способом монетизации игр является покупка "бустерпаков" - сундуков/ящиков/кейсов с
+предметами/карточками/деньгами, - предлагаем реализовать эту максимально простую и интересную функциональность для наших пользователей :)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+В базе уже есть 3 бустерпака, класс также частично реализован.
+Бустерпак должен содержать в себе опеределенное количество айтемов, для этого уже созданы таблицы `items` и `boosterpack_info`, хранящая в себе связь айтемов и паков.
+Айтем, полученный из бустерпака — это некоторое количество лайков; 1 лайк эквивалентен 1 usd.
 
-### Premium Partners
+Покупая такой пак, пользователь получает случайный айтем в виде количества лайков которые может потратить на "лайкинг" постов и комментариев.
+Лайки попадают на "лайк-счет" (поле `likes_balance`) пользователя с которого он и будет их
+тратить, то есть параллельно мы храним как счет в $, так и отдельный счет числа лайков у юзера.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+**Дополнительная задача  2** Необходимо реализовать полное логирование любых изменений баланса и написать sql запросы в соответствии с требованиями.
 
-## Contributing
+В файле `mysql/6task.sql` напишите, пожалуйста, ровно два запроса:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Сколько денег потрачено на бустерпаки по каждому паку отдельно, почасовая выборка. Также нужно показать, сколько получили юзеры из каждого пока в эквиваленте $. Выборка должна
+   быть за последние 30 дней.
+2. Выборка по юзеру, на сколько он пополнил баланс и сколько получил лайков за все время. Текущий остаток баланса в $ и лайков на счету.
